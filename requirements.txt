@@ -1,0 +1,7 @@
+selenium==3.4.0
+splinter==0.7.5
+slackclient==1.0.5
+APScheduler==3.3.1
+SQLAlchemy==1.1.9
+python-dateutil==2.6.0
+supervisor==3.3.1
