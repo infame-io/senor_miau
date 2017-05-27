@@ -11,6 +11,7 @@ session = scoped_session(DBSession)
 PH_URL = os.environ["PH_URL"]
 PH_USERNAME = os.environ["PH_USERNAME"]
 PH_PASSWORD = os.environ["PH_PASSWORD"]
+PH_CHANNEL = os.environ["PH_CHANNEL"]
 
 BOT_NAME = os.environ["BOT_NAME"]
 BOT_ID = os.environ["BOT_ID"]

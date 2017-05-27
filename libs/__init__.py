@@ -1,5 +1,8 @@
 __author__ = 'infame-io'
+import os
 import logging
+import subprocess
+import signal
 from apscheduler.schedulers.background import BackgroundScheduler
 from model import Jobs
 from settings import LOG_FILENAME, session
@@ -32,4 +35,19 @@ def jobs_cleaner():
         session.close()
 
     except Exception as e:
-        logging.error("Exception raised {}".format(e))
+        logging.error("Jobs cleaner exception raised {}".format(e))
+
+
+def phantomjs_cleaner():
+    try:
+        processes = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
+        out, err = processes.communicate()
+
+        for line in out.splitlines():
+            if "phantomjs" in line:
+                pid = int(line.split(None, 1)[0])
+                os.kill(pid, signal.SIGKILL)
+                logging.info("PhantomJS process {} killed".format(pid))
+
+    except Exception as e:
+        logging.error("PhantomJS cleaner exception raised {}".format(e))

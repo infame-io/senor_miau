@@ -1,6 +1,8 @@
 __author__ = 'infame-io'
 import re
 
+from dateutil import parser
+
 from model import Jobs
 from libs import logging, get_db_session
 from settings import slack_client, AT_BOT, BOOK_COMMAND, CANCEL_COMMAND, PENDING_COMMAND, JOB_REGEX
@@ -45,10 +47,12 @@ def handle_command(command, channel):
 
                 for job in jobs:
                     if str(job.id) in ids:
+                        day_week = parser.parse(job.date).strftime("%A")
                         session.delete(job)
                         session.commit()
                         ids.remove(str(job.id))
-                        job_msg = "Job for class {} on {} at {} has been removed".format(job.name, job.date, job.time)
+                        job_msg = "Job for class {} on {} {} at {} has been removed".format(job.name, day_week,
+                                                                                            job.date, job.time)
                         logging.info(job_msg)
                         confirmation_msg += job_msg + "\n"
             session.close()
@@ -65,7 +69,8 @@ def handle_command(command, channel):
         if jobs.count() > 0:
             confirmation_msg = ""
             for job in jobs:
-                confirmation_msg += "{}.- {} on {} at {}\n".format(job.id, job.name, job.date, job.time)
+                day_week = parser.parse(job.date).strftime("%A")
+                confirmation_msg += "{}.- {} on {} {} at {}\n".format(job.id, job.name, day_week, job.date, job.time)
             response = confirmation_msg
 
         else:
